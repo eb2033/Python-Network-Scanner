@@ -98,6 +98,7 @@ print(r"""
 #Target
 print("Please enter target IP or hostname")
 target = str(input())
+if target == "": target = "localhost"
 
 #Nmap options
 print("Choose your options: ")
@@ -147,9 +148,15 @@ exChoice = input()
 scandata = exportresult(scanner)
 
 if exChoice == "Y" or exChoice == "y":
-    with open('scanResult.json', 'w') as outfile:
-        json.dump(scandata, outfile, indent=2)
-        print("Results exported to scanResult.json. Have a nice day!")
+    #Check if file already exists
+    if os.path.exists("scanResult.json"):
+        with open('scanResult.json', 'a') as outfile:
+            json.dump(scandata, outfile, indent=2)
+            print("Results exported to scanResult.json. Have a nice day!")
+    else:
+        with open('scanResult.json', 'w') as outfile:
+            json.dump(scandata, outfile, indent=2)
+            print("Results exported to scanResult.json. Have a nice day!")
 elif exChoice == "N" or exChoice == "n":
     print("Have a nice day!")
     exit()
