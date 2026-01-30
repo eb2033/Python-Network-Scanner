@@ -1,8 +1,8 @@
 # Python-Network-Scanner
 Python network scanner i made to get familiar with using Linux and Python together
 
-#How to use
-Not too hard.
+# How to use  
+Not too hard.  
 • Download the file to your linux distribution of choice  
 • Make sure you have python3 installed  
 • Run "sudo python3 Scanz0r.py"  
