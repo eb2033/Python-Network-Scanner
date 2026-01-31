@@ -3,8 +3,9 @@
 import nmap
 import os
 import json
+import threading,time
 scanner = nmap.PortScanner()
-
+sep = " "
 #Changed the ladder of elifs to a function with the match statement
 def pickoption(choice):
     match choice:
@@ -77,6 +78,22 @@ def exportresult(scanner):
         results.append(host_entry)
     return results
 
+def scan(target, arguments):
+    #Scans a target with provided arguments
+    print("Scanning ", target, " with options: ", arguments)
+    scanner.scan(target, arguments=arguments)
+
+    #Print results
+    for host in scanner.all_hosts():
+        print("+---------------------------------+")
+        print("Host: ", host)
+        print("State: ", scanner[host].state())
+        for proto in scanner[host].all_protocols():
+            print("Protocol: ", proto)
+            ports = scanner[host][proto].keys()
+            for port in ports:
+                print("Port: ", port, "State: ", scanner[host][proto][port]['state'])
+        print("+---------------------------------+")
 #Start
 os.system('clear') # Will only work on Unix/Linux
 print(r"""+------------------------------------------+
@@ -96,10 +113,13 @@ print(r"""
 -------------------------------------------
 """)
 #Target
-print("Please enter target IP or hostname")
-target = str(input())
-if target == "": target = "localhost"
+print("Please enter target(s) IP or hostnames")
+print("127.0.0.1 192.168.1.1 etc..")
+#targets  =[]
+crosshairs = input()
+targets = crosshairs.split()
 
+print (targets)
 #Nmap options
 print("Choose your options: ")
 print (r"""
@@ -121,17 +141,26 @@ while choice != "0":
     print ("Currently selected Options: ",options)
     choice = input()
 
-
-#Convert the options set into a  1 string
-sep = " "
+#Convert the options and target sets into strings
 JoinedOptions = sep.join(options)
 
+#targets = list , Joinedoptions = arguments
 #Run the scan
-print("Scanning ",target," with options: ",JoinedOptions)
-scanner.scan(target, arguments=JoinedOptions)
+threads = []
+
+for target in targets:
+    t = threading.Thread(target=scan, args=(target, JoinedOptions))
+    threads.append(t)
+
+for t in threads:
+    t.start()
+
+for t in threads:
+    t.join()
+
 
 #Present results
-for host in scanner.all_hosts():
+'''for host in scanner.all_hosts():
     print("+---------------------------------+")
     print("Host: ", host)
     print("State: ", scanner[host].state())
@@ -140,7 +169,7 @@ for host in scanner.all_hosts():
         ports = scanner[host][proto].keys()
         for port in ports:
             print ("Port: ", port, "State: ", scanner[host][proto][port]['state'])
-    print("+---------------------------------+")
+    print("+---------------------------------+")'''
 
 #Offer to Export results to json file
 print("Would you like to export this to a JSON file? Y/N")
