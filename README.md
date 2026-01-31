@@ -17,3 +17,7 @@ Not too hard.
 Disclaimer:  
 I made this for fun and to try out Pycharm IDE, python-nmap and remotely pushing to git repo with Pycharm  
 *****DO NOT use this on any real servers belonging to other people , especially the government*****  
+
+
+https://github.com/user-attachments/assets/36f2d974-1d68-4a65-a160-b15e43e4287b
+
