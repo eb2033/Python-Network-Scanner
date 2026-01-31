@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import nmap
-import os
+import os,sys
 import json
 import threading,time
 scanner = nmap.PortScanner()
@@ -94,8 +94,11 @@ def scan(target, arguments):
             for port in ports:
                 print("Port: ", port, "State: ", scanner[host][proto][port]['state'])
         print("+---------------------------------+")
+
 #Start
 os.system('clear') # Will only work on Unix/Linux
+
+#ASCII art generated from https://asciiart.eu/text-to-ascii-art
 print(r"""+------------------------------------------+
 |                                          |
 |   ____                       ___         |
@@ -112,14 +115,13 @@ print(r"""
 -2026
 -------------------------------------------
 """)
-#Target
+
+#Target list
 print("Please enter target(s) IP or hostnames")
 print("127.0.0.1 192.168.1.1 etc..")
-#targets  =[]
 crosshairs = input()
 targets = crosshairs.split()
 
-print (targets)
 #Nmap options
 print("Choose your options: ")
 print (r"""
@@ -145,6 +147,7 @@ while choice != "0":
 JoinedOptions = sep.join(options)
 
 #targets = list , Joinedoptions = arguments
+os.system('clear')
 #Run the scan
 threads = []
 
@@ -159,23 +162,13 @@ for t in threads:
     t.join()
 
 
-#Present results
-'''for host in scanner.all_hosts():
-    print("+---------------------------------+")
-    print("Host: ", host)
-    print("State: ", scanner[host].state())
-    for proto in scanner[host].all_protocols():
-        print("Protocol: ", proto)
-        ports = scanner[host][proto].keys()
-        for port in ports:
-            print ("Port: ", port, "State: ", scanner[host][proto][port]['state'])
-    print("+---------------------------------+")'''
-
-#Offer to Export results to json file
+sys.stdout.flush()
+#Offer to Export results to JSON file
 print("Would you like to export this to a JSON file? Y/N")
 exChoice = input()
 scandata = exportresult(scanner)
 
+#Export results or exit out
 if exChoice == "Y" or exChoice == "y":
     #Check if file already exists
     if os.path.exists("scanResult.json"):
